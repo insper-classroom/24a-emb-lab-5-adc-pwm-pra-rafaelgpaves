@@ -40,10 +40,16 @@ void x_task() {
     adc_t data_x;
     data_x.axis = 0;
 
+    int valores_x[5] = {0, 0, 0, 0, 0};
+    int counter_x = 0;
+
     while (true) {
 
         uint16_t result_x = adc_read();
         data_x.val = (result_x - 2047) * 255 / 2048;
+        valores_x[counter_x] = data_x.val;
+        counter_x = (counter_x + 1) % 5;
+        data_x.val = (valores_x[0] + valores_x[1] + valores_x[2] + valores_x[3] + valores_x[4])/5;
         xQueueSend(xQueueAdc, &data_x, 0);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
@@ -58,10 +64,16 @@ void y_task() {
     adc_t data_y;
     data_y.axis = 1;
 
+    int valores_y[5] = {0, 0, 0, 0, 0};
+    int counter_y = 0;
+
     while (true) {
 
         uint16_t result_y = adc_read();
         data_y.val = - (result_y - 2047) * 255 / 2047;
+        valores_y[counter_y] = data_y.val;
+        counter_y = (counter_y + 1) % 5;
+        data_y.val = (valores_y[0] + valores_y[1] + valores_y[2] + valores_y[3] + valores_y[4])/5;
         xQueueSend(xQueueAdc, &data_y, 0);
         vTaskDelay(pdMS_TO_TICKS(100));
     }
